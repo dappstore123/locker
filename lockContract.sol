@@ -51,8 +51,7 @@ contract Lockdrop {
     /**
      * @dev        Locks up the value sent to contract in a new Lock
      * @param      term         The length of the lock up
-     * @param      edgewareAddr The bytes representation of the target edgeware key
-     * @param      isValidator  Indicates if sender wishes to be a validator
+     * @param      toAddr 
      */
     function lock(Term term,address  toAddr)
         external
@@ -74,9 +73,9 @@ contract Lockdrop {
      * @dev        Signals a contract's (or address's) balance decided after lock period
      * @param      contractAddr  The contract address from which to signal the balance of
      * @param      nonce         The transaction nonce of the creator of the contract
-     * @param      edgewareAddr   The bytes representation of the target edgeware key
+     * @param      toAddr   
      */
-    function signal(address contractAddr, uint32 nonce, address calldata toAddr)
+    function signal(address contractAddr, uint32 nonce, address  toAddr)
         external
         didStart
         didNotEnd
