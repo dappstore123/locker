@@ -40,8 +40,8 @@ contract Lockdrop {
     uint256 public LOCK_START_TIME;
     uint256 public LOCK_END_TIME;
     // ETH locking events
-    event Locked(address indexed owner, uint256 eth, Lock lockAddr, Term term, bytes edgewareAddr, bool isValidator, uint time);
-    event Signaled(address indexed contractAddr, bytes edgewareAddr, uint time);
+    event Locked(address indexed owner, uint256 eth, Lock lockAddr, Term term, address toAddr, uint time);
+    event Signaled(address indexed contractAddr, address addr, uint time);
     
     constructor(uint startTime) public {
         LOCK_START_TIME = startTime;
@@ -54,7 +54,7 @@ contract Lockdrop {
      * @param      edgewareAddr The bytes representation of the target edgeware key
      * @param      isValidator  Indicates if sender wishes to be a validator
      */
-    function lock(Term term, bytes calldata edgewareAddr, bool isValidator)
+    function lock(Term term,address  toAddr)
         external
         payable
         didStart
@@ -64,10 +64,10 @@ contract Lockdrop {
         address owner = msg.sender;
         uint256 unlockTime = unlockTimeForTerm(term);
         // Create ETH lock contract
-        Lock lockAddr = (new Lock).value(eth)(owner, unlockTime);
+        Lock lockAddr = (new Lock).value(eth)(toAddr, unlockTime);
         // ensure lock contract has at least all the ETH, or fail
         assert(address(lockAddr).balance >= msg.value);
-        emit Locked(owner, eth, lockAddr, term, edgewareAddr, isValidator, now);
+        emit Locked(owner, eth, lockAddr, term, toAddr, now);
     }
 
     /**
@@ -76,13 +76,13 @@ contract Lockdrop {
      * @param      nonce         The transaction nonce of the creator of the contract
      * @param      edgewareAddr   The bytes representation of the target edgeware key
      */
-    function signal(address contractAddr, uint32 nonce, bytes calldata edgewareAddr)
+    function signal(address contractAddr, uint32 nonce, address calldata toAddr)
         external
         didStart
         didNotEnd
         didCreate(contractAddr, msg.sender, nonce)
     {
-        emit Signaled(contractAddr, edgewareAddr, now);
+        emit Signaled(contractAddr, toAddr, now);
     }
 
     function unlockTimeForTerm(Term term) internal view returns (uint256) {
