@@ -31,12 +31,13 @@ contract Lock {
 
 contract Lockdrop {
     enum Term {
+        OneDay,
         ThreeMo,
         SixMo,
         TwelveMo
     }
     // Time constants
-    uint256 constant public LOCK_DROP_PERIOD = 1 days * 92; // 3 months
+    uint256 constant public LOCK_DROP_PERIOD = 1 days; // 3 months
     uint256 public LOCK_START_TIME;
     uint256 public LOCK_END_TIME;
     // ETH locking events
@@ -85,6 +86,7 @@ contract Lockdrop {
     }
 
     function unlockTimeForTerm(Term term) internal view returns (uint256) {
+         if (term == Term.OneDay) return now + 1 days;
         if (term == Term.ThreeMo) return now + 92 days;
         if (term == Term.SixMo) return now + 183 days;
         if (term == Term.TwelveMo) return now + 365 days;
