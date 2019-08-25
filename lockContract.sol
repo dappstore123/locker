@@ -40,7 +40,6 @@ contract Lockdrop {
     
     // ETH locking events
     event Locked(address indexed owner, uint256 eth, Lock lockAddr, Term term, address toAddr, uint time);
-    event Signaled(address indexed contractAddr, address addr, uint time);
     
 
 
